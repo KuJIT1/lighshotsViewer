@@ -1,0 +1,7 @@
+{
+	"port": 3000,
+	"uiConfig": {	
+		"defaultIndexNumber": "vj9368",
+		"indexNumberLength": 6
+	}
+}

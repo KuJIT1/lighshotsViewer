@@ -4,9 +4,13 @@
 const express = require('express');
 const axios = require('axios');
 
-const app = express();
-const port = 3000;
 const urlRegEx = new RegExp('"(https:\/\/image\.prntscr\.com\/image\/[^"]+)"');
+
+const config = require("./appconfig.json");
+
+const app = express();
+const port = config.port;
+const uiConfig = config.uiConfig;
 
 async function getImageUrl(indexNumber){
 	return axios
@@ -36,9 +40,14 @@ async function getImageData(indexNumber){
 
 app.use(express.static('public'));
 
+app.get('/uiinfo', (req, res) => {
+	res.send(uiConfig); // TODO: why 304 status
+});
+
 app.get('/img', (req,res) => {
 	getImageData(req.query.index)
-		.then(imageData => imageData && imageData.pipe(res) || res.sendStatus(404));
+		.then(imageData => imageData && imageData.pipe(res) || res.sendStatus(404))
+		.catch(exception => res.sendStatus(404));
 });
 
 app.get('/', (_req, res) => {
